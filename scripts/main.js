@@ -16,6 +16,7 @@
     console.log( data );
     $weatherSummary.text( data.minutely.summary )
     // $weatherIcon.add(document.getElementById("js-weather-icon"), icons.data.minutely.icon)
+    // ^ trying to pull the icon string from DarkSky API, pull the icon file, and map it to HTML page
     for ( let timeSlot  of data.minutely.data ) {
       $weatherShowcase.append(`
         <dt>
