@@ -1,36 +1,35 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Daily Starter</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="./styles/main.css">
-    </head>
-    <body>
-        <h1>Get your day started with the right info</h1>
-
-        <section class="weather">
-          <h2 id="js-weather-summary"></h2>
-          <canvas id="$js-weather-icon" width="128" height="128"></canvas>
-          <dl id="js-weather-showcase">
-          </dl>
-        </section>
-        <main>
-                <div class="row">
-                        <h1>Skycons</h1>
-                        <figure class="icons">
-                        <canvas id="currentWeatherIcon" width="128" height="128"></canvas>
-                </div>
-        </main>
-        <footer>
-        </footer>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js"
-          integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-          crossorigin="anonymous">
-        </script>
-        <script src="./scripts/skycons.js"></script>
-        <script src="./scripts/main.js" charset="utf-8"></script>
-    </body>
+<head>
+  <meta charset="utf-8">
+  <title>Daily Starter</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+  <h1>Get your day started with the right info</h1>
+  
+  <section class="weather">
+    <h2 id="js-weather-summary"></h2>
+    <canvas id="$js-weather-icon"></canvas>
+    <dl id="js-weather-showcase">
+    </dl>
+  </section>
+  <main>
+    <div class="row">
+      <h1>Skycons</h1>
+      <canvas id="currentWeatherIcon"></canvas>
+    </div>
+  </main>
+  <footer>
+  </footer>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous">
+  </script>
+  <script src="./scripts/skycons.js"></script>
+  <script src="./scripts/main.js" charset="utf-8"></script>
+</body>
 
 </html>

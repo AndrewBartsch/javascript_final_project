@@ -7,67 +7,81 @@
 // pin venues from foursquare
 // $(document).ready(function){
 
-  var weatherResponse;
-  const $weatherSummary = $('#js-weather-summary');
-  const $weatherShowcase = $('#js-weather-showcase');
-  const $weatherIcon = $('#js-weather-icon');
+var weatherResponse;
+const $weatherSummary = $('#js-weather-summary');
+const $weatherShowcase = $('#js-weather-showcase');
+const $weatherIcon = $('#js-weather-icon');
 
-  function handleWeatherData( data ) {
-    console.log( data );
-    $weatherSummary.text( data.minutely.summary )
-    // $weatherIcon.add(document.getElementById("js-weather-icon"), icons.data.minutely.icon)
-    // ^ trying to pull the icon string from DarkSky API, pull the icon file, and map it to HTML page
-    for ( let timeSlot  of data.minutely.data ) {
-      $weatherShowcase.append(`
-        <dt>
-          Time
-        </dt>
-        <dd>
-          ${new Date( timeSlot.time*1000 )}
-        </dd>
-        <dt>
-          Precipitation intensity
-        </dt>
-        <dd>
-          ${ timeSlot.precipIntensity}
-        </dd>
-        <dt>
-          Precipitation probability
-        </dt>
-        <dd>
-          ${ timeSlot.precipProbability}
-        </dd>
-      `)
-    }
+function handleWeatherData( data ) {
+  console.log( data.currently );
+  const temp = data.currently.temperature;
+  const time = data.currently.time;
+  const summary = data.currently.summary;
+  const icon = data.currently.icon;
+  
+  $weatherSummary.text( summary );
+  $weatherShowcase.append(`
+    <dt>
+      Time
+    </dt>
+    <dd>
+      ${new Date( time*1000 )}
+    </dd>
+    `)
+    renderWheatherIcon( icon );
+    renderWeatherTemp( temp );
   }
-
+  
+  function renderWeatherTemp( temp ) {
+    const celsiusNumber = ( (temp - 32) * 5/9 ).toFixed(2);
+    const celsiusString = `${celsiusNumber} °C`;
+    $weatherShowcase.append(`
+      <dt>
+        Temperature
+      </dt>
+      <dd>
+        ${celsiusString}
+      </dd>
+      `)
+  }
+  
+  function renderWheatherIcon( icon ) {
+    const  skycons = new Skycons({
+      color: "black"
+    });
+    const iconString = getIconString( icon )
+    skycons.add(document.getElementById("currentWeatherIcon"), Skycons[iconString]);
+    skycons.play();
+  }
+  
+  function getIconString( icon ) {
+    return icon.toUpperCase().replace(/-/g, '_');
+  }
+  
+  //get location and return a promise
   function getPosition (options) {
     return new Promise(function (resolve, reject) {
       navigator.geolocation.getCurrentPosition(resolve, reject, options);
     });
   }
-
+  
+  // fetch data from darksky
   function getWeatherData( coordinates ){
-    console.log( 'inside get weather data');
-
     axios.get(`https://api.darksky.net/forecast/1457d6f1317a446ae14320510b709b71/${coordinates.latitude}, ${coordinates.longitude}`)
     .then( response => {
+      // render weather Data
       handleWeatherData( response.data )
     })
     .catch( error => {
       console.error( error );
     })
   }
-
-
+  
+  // start the app
   document.addEventListener("DOMContentLoaded", ( ) =>  {
     window.onload = ( ) => {
-      console.log( 'hello');
       getPosition()
       .then((response) => {
-        console.log( response.coords );
-        console.log('LAT => ', response.coords.latitude);
-        console.log('LONG => ', response.coords.longitude);
         getWeatherData( response.coords )
       })
       .catch((err) => {
@@ -75,16 +89,3 @@
       });
     }
   });
-
-var icons = new Skycons(),
-    list  = [
-      "clear-day", "clear-night", "partly-cloudy-day",
-      "partly-cloudy-night", "cloudy", "rain", "sleet", "snow", "wind",
-      "fog"
-    ],
-    i;
-for(i = list.length; i--; )
-  icons.set(list[i], list[i]);
-icons.play();
-
-//});
