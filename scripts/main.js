@@ -5,11 +5,11 @@
 // Store data
 // render a google map
 // pin venues from foursquare
-// add spinner
+// $(document).ready(function){
 
-
-var longitude = null
-var latitude = null
+var weatherResponse;
+var latitude;
+var longitude;
 const $weatherSummary = $('#js-weather-summary');
 const $weatherShowcase = $('#js-weather-showcase');
 const $weatherIcon = $('#js-weather-icon');
