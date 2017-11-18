@@ -11,6 +11,9 @@
 const $weatherSummary = $('#js-weather-summary');
 const $weatherShowcase = $('#js-weather-showcase');
 const $weatherIcon = $('#js-weather-icon');
+const $coffeeOne = $('#js-coffee-one');
+const $coffeeTwo = $('#js-coffee-two');
+const $coffeeThree = $('#js-coffee-three');
 
 function handleWeatherData( data ) {
    console.log( data.currently );
@@ -104,6 +107,8 @@ function handleWeatherData( data ) {
             console.log(coordinates);
             console.log(response);
             initMap(coordinates, response);
+            const coffeeOne = response.data.response.groups[0].items[0].venue.name;
+            $coffeeOne.text (coffeeOne); 
          })
          .catch( error => {
             console.log( error );
