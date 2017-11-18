@@ -7,9 +7,7 @@
 // pin venues from foursquare
 // $(document).ready(function){
 
-var weatherResponse;
-var latitude;
-var longitude;
+
 const $weatherSummary = $('#js-weather-summary');
 const $weatherShowcase = $('#js-weather-showcase');
 const $weatherIcon = $('#js-weather-icon');
@@ -90,7 +88,7 @@ function handleWeatherData( data ) {
                longitude = response.coords.longitude;
                getWeatherData( response.coords );
                getCoffeeLocations( response.coords );
-               initMap( response.coords );
+               //initMap( response.coords );
             })
             .catch((err) => {
                console.error(err.message);
@@ -98,39 +96,69 @@ function handleWeatherData( data ) {
          }
       });
 
-      console.log(longitude);
-      console.log(latitude);
-
       // fetch coffee venues from Foursquare
 
       function getCoffeeLocations( coordinates ){
-         axios.get(`https://api.foursquare.com/v2/venues/explore?client_id=VVO2RYUAX4D455H2LVRIUMOUGUVUK3UY0T0YABYFTERIYMS4&client_secret=20YBURIZDKZJHFIGBEPKYSRRIZWDYXTDBAYWEA1SJW24DHMJ&v=20161016&radius=250&openNow=1&ll=51.51535,-0.07204519999999999&${coordinates.latitude},${coordinates.longitude}`)
+         axios.get(`https://api.foursquare.com/v2/venues/explore?client_id=VVO2RYUAX4D455H2LVRIUMOUGUVUK3UY0T0YABYFTERIYMS4&client_secret=20YBURIZDKZJHFIGBEPKYSRRIZWDYXTDBAYWEA1SJW24DHMJ&v=20161016&radius=750&openNow=1&section=coffe&ll=${coordinates.latitude},${coordinates.longitude}`)
          .then( response => {
-            // pass coffee locations to map
+            console.log(coordinates);
             console.log(response);
+            initMap(coordinates, response);
          })
          .catch( error => {
             console.log( error );
          })
-      }
+    };
 
-      function initMap( coordinates ) {
-
+      function initMap( coordinates, response ) {
          const myLatLng = {
             lat: coordinates.latitude,
-            lng: coordinates.longitude
+            lng: coordinates.longitude,
+            info: "You!"
          };
-
          // Create a map object and specify the DOM element for display.
          const map = new google.maps.Map(document.getElementById('map'), {
             center: myLatLng,
-            zoom: 4
+            zoom: 14
          });
-
          // Create a marker and set its position.
-         const marker = new google.maps.Marker({
-            map: map,
-            position: myLatLng,
-            title: 'Hello World!'
-         });
-      }
+        const coffeeShopOne = {lat: response.data.response.groups[0].items[0].venue.location.lat,
+                             lng: response.data.response.groups[0].items[0].venue.location.lng,
+                             info: response.data.response.groups[0].items[0].venue.name
+                            };
+
+        const coffeeShopTwo = {lat: response.data.response.groups[0].items[1].venue.location.lat,
+                            lng: response.data.response.groups[0].items[1].venue.location.lng,
+                            info: response.data.response.groups[0].items[1].venue.name
+                            };
+
+        const coffeeShopThree = {lat: response.data.response.groups[0].items[2].venue.location.lat,
+                              lng: response.data.response.groups[0].items[2].venue.location.lng,
+                              info: response.data.response.groups[0].items[2].venue.name
+                              };
+
+        var locations = [
+                         [myLatLng.info, myLatLng.lat, myLatLng.lng, 0],
+                         [coffeeShopOne.info, coffeeShopOne.lat, coffeeShopOne.lng, 1],
+                         [coffeeShopTwo.info, coffeeShopTwo.lat, coffeeShopTwo.lng, 2],
+                         [coffeeShopThree.info, coffeeShopThree.lat, coffeeShopThree.lng, 3]
+                        ];
+
+        var infowindow = new google.maps.InfoWindow({});
+
+        var marker, i;
+
+        for (i = 0; i < locations.length; i++) {
+		marker = new google.maps.Marker({
+			position: new google.maps.LatLng(locations[i][1], locations[i][2], locations[i][3], locations[i],4),
+			map: map
+		});
+
+        google.maps.event.addListener(marker, 'click', (function (marker, i) {
+			return function () {
+				infowindow.setContent(locations[i][0]);
+				infowindow.open(map, marker);
+			}
+		})(marker, i));
+        };
+    }
