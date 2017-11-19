@@ -108,7 +108,7 @@ function handleWeatherData( data ) {
             console.log(response);
             initMap(coordinates, response);
             const coffeeOne = response.data.response.groups[0].items[0].venue.name;
-            $coffeeOne.text (coffeeOne); 
+            $coffeeOne.text (coffeeOne);
          })
          .catch( error => {
             console.log( error );
@@ -152,11 +152,14 @@ function handleWeatherData( data ) {
         var infowindow = new google.maps.InfoWindow({});
 
         var marker, i;
+        var markerLabel = 'X123';
+        var markerIndex = 0;
 
         for (i = 0; i < locations.length; i++) {
 		marker = new google.maps.Marker({
 			position: new google.maps.LatLng(locations[i][1], locations[i][2], locations[i][3], locations[i],4),
-			map: map
+			map: map,
+            label: markerLabel[markerIndex++ % markerLabel.length]
 		});
 
         google.maps.event.addListener(marker, 'click', (function (marker, i) {
