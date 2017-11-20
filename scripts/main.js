@@ -125,11 +125,7 @@ function initMap(coordinates, response) {
     renderMarker(marker, i, map);
   });
 
-  const you = {
-    lat: myLatLng.lat,
-    lng: myLatLng.lng,
-  };
-  renderMarker(you,'YOU', map);
+  renderMarker(myLatLng,'YOU', map);
 }
 
 function renderTableRows(item, i) {
