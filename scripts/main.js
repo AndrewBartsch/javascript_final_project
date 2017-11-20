@@ -86,12 +86,27 @@ function getWeatherData(coordinates) {
     });
 }
 
+
+function renderMarker(marker, label, map) {
+  const latLng = new google.maps.LatLng(marker.lat, marker.lng);
+  const pin = new google.maps.Marker({
+    position: latLng,
+    label: `${label}`,
+    map,
+  });
+  const infowindow = new google.maps.InfoWindow({});
+  google.maps.event.addListener(pin, 'click', () => {
+    infowindow.setContent(marker.info);
+    infowindow.open(map, pin);
+  });
+}
+
 // COFFEE
 function initMap(coordinates, response) {
   const myLatLng = {
     lat: coordinates.latitude,
     lng: coordinates.longitude,
-    info: 'You!',
+    // info: 'You!',
   };
   // Create a map object and specify the DOM element for display.
   const map = new google.maps.Map(document.getElementById('map'), {
@@ -107,21 +122,17 @@ function initMap(coordinates, response) {
   }));
 
   markers.forEach((marker, i) => {
-    const latLng = new google.maps.LatLng(marker.lat, marker.lng);
-    const pin = new google.maps.Marker({
-      position: latLng,
-      label: `${i}`,
-      map,
-    });
-    const infowindow = new google.maps.InfoWindow({});
-    google.maps.event.addListener(pin, 'click', () => {
-      infowindow.setContent(marker.info);
-      infowindow.open(map, pin);
-    });
+    renderMarker(marker, i, map);
   });
+
+  const you = {
+    lat: myLatLng.lat,
+    lng: myLatLng.lng,
+  };
+  renderMarker(you,'YOU', map);
 }
 
-function renderTableRows(item, i = 0) {
+function renderTableRows(item, i) {
   $coffeeTable.append(`<tr>
     <td>${i}</td>
     <td>${item.venue.name}</td>
@@ -134,7 +145,6 @@ function renderTableRows(item, i = 0) {
 
 function writeTableRows(items) {
   items.forEach((item, i) => {
-    if (!i) return;
     renderTableRows(item, i);
   });
 }
