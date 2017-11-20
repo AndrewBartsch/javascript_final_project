@@ -1,35 +1,48 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-   <meta charset="utf-8">
-   <title>Daily Starter</title>
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-   <link rel="stylesheet" href="./styles/main.css">
+  <meta charset="utf-8">
+  <title>Daily Starter</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./styles/main.css">
 </head>
+
 <body>
-   <h1>Get your day started with the right info</h1>
-   <section class="weather">
+  <header class="main-header">
+    <h1>Get your day started with the right info</h1>
+  </header>
+  <main>
+    <section class="weather">
       <h3> Your current weather </h3>
       <h3 id="js-weather-summary"></h3>
       <dl id="js-weather-showcase">
       </dl>
-   </section>
-   <main>
-         <canvas id="currentWeatherIcon"></canvas>
-      </div>
+      <div><canvas id="currentWeatherIcon"></canvas></div>
+    </section>
+    <section>
       <h2> Your local caffeine </h2>
       <div id="map" class="map"></div>
-            <h4 id="js-coffee-one"> </h4>
-            <h4 id="js-coffee-two"> </h4>
-            <h4 id="js-coffee-three"> </h4>
-   </main>
-   <footer>
-   </footer>
-   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-   <script src="./scripts/skycons.js"></script>
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-UbPQnnEnIpu1P161sBlQysRM4ePr804"></script>
-   <script src="./scripts/main.js" charset="utf-8"></script>
+      <table id="coffee-table">
+        <thead>
+          <tr>
+            <th>Map Number</th>
+            <th>Coffee Shop</th>
+            <th>Address</th>
+            <th>Rating</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+  <footer>
+  </footer>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="./scripts/skycons.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-UbPQnnEnIpu1P161sBlQysRM4ePr804"></script>
+  <script src="./scripts/main.js" charset="utf-8"></script>
 </body>
 
 </html>
