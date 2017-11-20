@@ -1,0 +1,29 @@
+{
+  "name": "javascript_final_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "httpster"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndrewBartsch/javascript_final_project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndrewBartsch/javascript_final_project/issues"
+  },
+  "homepage": "https://github.com/AndrewBartsch/javascript_final_project#readme",
+  "dependencies": {
+    "httpster": "^1.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^4.11.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-airbnb-base": "^12.1.0"
+  }
+}
