@@ -45,7 +45,7 @@ function renderWeatherIcon(icon) {
 }
 
 function handleWeatherData(data) {
-  console.log('currently', data.currently);
+  // console.log('currently', data.currently);
   const {
     temperature,
     time,
@@ -130,7 +130,7 @@ function initMap(coordinates, response) {
     // [coffeeShopThree.info, coffeeShopThree.lat, coffeeShopThree.lng, 3]
   ];
 
-  console.log('locations', locations);
+  // console.log('locations', locations);
 
   markers.forEach((marker) => {
     locations.push(marker);
@@ -143,13 +143,13 @@ function initMap(coordinates, response) {
 
   for (let i = 0, len = locations.length; i < len; i += 1) {
     const loc = locations[i];
-    console.log('location', loc);
+    // console.log('location', loc);
     marker = new google.maps.Marker({
       position: new google.maps.LatLng(loc.info, loc.lat, loc.lng, loc, i),
       map,
       label: (i === 0) ? 'X' : i.toString(),
     });
-    console.log('marker', marker);
+    // console.log('marker', marker);
 
     google.maps.event.addListener(marker, 'click', () => {
       infowindow.setContent(loc.info);
@@ -158,34 +158,42 @@ function initMap(coordinates, response) {
   }
 }
 
+function renderTableRows(item, i = 0) {
+  $coffeeTable.append(`<tr>
+    <td>${i+1}</td>
+    <td>${item.venue.name}</td>
+    <td>
+      ${item.venue.location.formattedAddress.map(fragment => `<span>${fragment}</span>`)}
+    </td>
+    <td>${item.venue.rating}</td>
+  </tr>`);
+}
+
 function writeTableRows(items) {
-  items.forEach((item, i) => {
-    if (!i) return;
-    $coffeeTable.append(`<tr>
-      <td>${i}</td>
-      <td>${item.venue.name}</td>
-      <td>
-  ${item.address.map(fragment => `<span>${fragment}</span>`)}
-      </td>
-      <td>${item.rating}</td>
-    </tr>`);
-  });
+  console.log( 'ITEMS', items);
+  if (items.length) {
+    console.log('ITEMS IS AN ARRAY');
+    items.forEach((item, i) => {
+      if (!i) return;
+      renderTableRows(item, i);
+    });
+  } else {
+    console.log('ITEMS IS AN OBJECT');
+    renderTableRows(items);
+  }
 }
 
 // fetch coffee venues from Foursquare
 
 function getCoffeeLocations(coordinates) {
-  console.log('coffee coords', coordinates);
-  axios.get(`https://api.foursquare.com/v2/venues/explore?client_id=VVO2RYUAX4D455H2LVRIUMOUGUVUK3UY0T0YABYFTERIYMS4&client_secret=20YBURIZDKZJHFIGBEPKYSRRIZWDYXTDBAYWEA1SJW24DHMJ&v=20161016&radius=750&openNow=1&section=coffe&ll=${coordinates.latitude},${coordinates.longitude}`)
+  axios.get(`https://api.foursquare.com/v2/venues/explore?client_id=VVO2RYUAX4D455H2LVRIUMOUGUVUK3UY0T0YABYFTERIYMS4&client_secret=20YBURIZDKZJHFIGBEPKYSRRIZWDYXTDBAYWEA1SJW24DHMJ&v=20161016&radius=750&openNow=1&section=coffee&ll=${coordinates.latitude},${coordinates.longitude}`)
     .then((response) => {
-      console.log('coffee response ', response);
       initMap(coordinates, response);
       const items = response.data.response.groups[0].items[0];
-      // $coffeeOne.text(coffeeOne);
       writeTableRows(items);
     })
     .catch((error) => {
-      console.log('coffee error', error);
+      console.error('coffee error', error);
     });
 }
 
@@ -195,10 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .then((response) => {
       const { coords } = response;
       const { coords: { longitude: long, latitude: lat } } = response;
-      console.log('lat', lat);
-      console.log('long', long);
-      // latitude = lat;
-      // longitude = long;
+      // console.log('lat', lat);
+      // console.log('long', long);
       getWeatherData(coords);
       getCoffeeLocations(coords);
     })
