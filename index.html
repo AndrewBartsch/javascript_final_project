@@ -14,17 +14,21 @@
   </header>
   <main>
     <section class="weather">
+        <dl id="time">
+        </dl>
       <h3> Your current weather </h3>
       <h3 id="js-weather-summary"></h3>
+      <div><canvas id="currentWeatherIcon"></canvas></div>
       <dl id="js-weather-showcase">
       </dl>
-      <div><canvas id="currentWeatherIcon"></canvas></div>
+      <h3> Today's weather </h3>
+      <div><canvas id="forecastWeatherIcon"></canvas></div>
     </section>
     <section>
-      <h2> Your local caffeine </h2>
+      <h3> Your local caffeine </h3>
       <div id="map" class="map"></div>
-      <table id="coffee-table">
-        <thead>
+      <table id="coffee-table" class="table table-bordered">
+        <thead class="thead-default">
           <tr>
             <th>Map Number</th>
             <th>Coffee Shop</th>

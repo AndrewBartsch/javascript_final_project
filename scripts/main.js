@@ -14,6 +14,7 @@
 const $weatherSummary = $('#js-weather-summary');
 const $weatherShowcase = $('#js-weather-showcase');
 const $coffeeTable = $('#coffee-table tbody');
+const $weatherShowcaseTime = $('#time')
 
 function renderWeatherTemp(temp) {
   const celsiusNumber = ((temp - 32) / (9 / 5)).toFixed(2);
@@ -32,12 +33,12 @@ function getIconString(icon) {
   return icon.toUpperCase().replace(/-/g, '_');
 }
 
-function renderWeatherIcon(icon) {
+function renderWeatherIcon(icon, elementId) {
   const skycons = new Skycons({
     color: 'black',
   });
   const iconString = getIconString(icon);
-  skycons.add(document.getElementById('currentWeatherIcon'), Skycons[iconString]);
+  skycons.add(document.getElementById(elementId), Skycons[iconString]);
   skycons.play();
 }
 
@@ -50,8 +51,13 @@ function handleWeatherData(data) {
     icon,
   } = data.currently;
 
+  const {
+      icon: forecasticon,
+      summary: forecastsummary,
+  } = data.daily;
+
   $weatherSummary.text(summary);
-  $weatherShowcase.append(`
+  $weatherShowcaseTime.append(`
     <dt>
       Time
     </dt>
@@ -59,7 +65,8 @@ function handleWeatherData(data) {
       ${new Date(time * 1000)}
     </dd>
     `);
-  renderWeatherIcon(icon);
+  renderWeatherIcon(icon, 'currentWeatherIcon');
+  renderWeatherIcon(forecasticon, 'forecastWeatherIcon');
   renderWeatherTemp(temperature);
 }
 
@@ -97,7 +104,6 @@ function renderMarker(marker, label, map) {
   });
 }
 
-// COFFEE
 function initMap(coordinates, response) {
   const myLatLng = {
     lat: coordinates.latitude,
@@ -118,7 +124,7 @@ function initMap(coordinates, response) {
   }));
 
   markers.forEach((marker, i) => {
-    renderMarker(marker, i, map);
+    renderMarker(marker, i+1, map);
   });
 
   renderMarker(myLatLng,'YOU', map);
@@ -126,7 +132,7 @@ function initMap(coordinates, response) {
 
 function renderTableRows(item, i) {
   $coffeeTable.append(`<tr>
-    <td>${i}</td>
+    <td>${i+1}</td>
     <td>${item.venue.name}</td>
     <td>
       ${item.venue.location.formattedAddress.map(fragment => `<span>${fragment}</span>`)}
@@ -148,6 +154,7 @@ function getCoffeeLocations(coordinates) {
     .then((response) => {
       initMap(coordinates, response);
       const items = response.data.response.groups[0].items;
+      console.log(items);
       writeTableRows(items);
     })
     .catch((error) => {
