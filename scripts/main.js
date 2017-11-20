@@ -30,7 +30,7 @@ function renderWeatherTemp(temp) {
       ${celsiusString}
     </dd>
     `);
-}
+  }
 
 function getIconString(icon) {
   return icon.toUpperCase().replace(/-/g, '_');
@@ -77,108 +77,72 @@ function getPosition(options) {
 // fetch data from darksky
 function getWeatherData(coordinates) {
   axios.get(`https://api.darksky.net/forecast/1457d6f1317a446ae14320510b709b71/${coordinates.latitude}, ${coordinates.longitude}`)
-  .then((response) => {
+    .then((response) => {
     // render weather Data
-    handleWeatherData(response.data);
-  })
-  .catch((error) => {
-    console.error(error);
+      handleWeatherData(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+// COFFEE
+function initMap(coordinates, response) {
+  const myLatLng = {
+    lat: coordinates.latitude,
+    lng: coordinates.longitude,
+    info: 'You!',
+  };
+  // Create a map object and specify the DOM element for display.
+  const map = new google.maps.Map(document.getElementById('map'), {
+    center: myLatLng,
+    zoom: 14,
+  });
+
+  const markerData = response.data.response.groups[0].items;
+  const markers = markerData.map(marker => ({
+    lat: marker.venue.location.lat,
+    lng: marker.venue.location.lng,
+    info: marker.venue.name,
+  }));
+
+  markers.forEach((marker, i) => {
+    const latLng = new google.maps.LatLng(marker.lat, marker.lng);
+    const pin = new google.maps.Marker({
+      position: latLng,
+      label: `${i}`,
+      map,
+    });
+    const infowindow = new google.maps.InfoWindow({});
+    google.maps.event.addListener(pin, 'click', () => {
+      infowindow.setContent(marker.info);
+      infowindow.open(map, pin);
+    });
   });
 }
 
-  // COFFEE
-  function initMap(coordinates, response) {
-    const myLatLng = {
-      lat: coordinates.latitude,
-      lng: coordinates.longitude,
-      info: 'You!',
-    };
-    // Create a map object and specify the DOM element for display.
-    const map = new google.maps.Map(document.getElementById('map'), {
-      center: myLatLng,
-      zoom: 14,
-    });
+function renderTableRows(item, i = 0) {
+  $coffeeTable.append(`<tr>
+    <td>${i}</td>
+    <td>${item.venue.name}</td>
+    <td>
+      ${item.venue.location.formattedAddress.map(fragment => `<span>${fragment}</span>`)}
+    </td>
+    <td>${item.venue.rating}</td>
+  </tr>`);
+}
 
-    const markerData = response.data.response.groups[0].items;
-    const markers = markerData.map(marker => ({
-      lat: marker.venue.location.lat,
-      lng: marker.venue.location.lng,
-      info: marker.venue.name,
+function writeTableRows(items) {
+  items.forEach((item, i) => {
+    if (!i) return;
+    renderTableRows(item, i);
+  });
+}
 
-    }));
-    console.log('markers', markers );
+// fetch coffee venues from Foursquare
 
-
-    // console.log('markers', locations);
-
-    markers.forEach((marker, i) => {
-      console.log( 'marker', marker );
-      const latLng = new google.maps.LatLng(marker.lat, marker.lng);
-      console.log( 'coodinate', latLng );
-      const pin = new google.maps.Marker({
-          position: latLng,
-          label: `${i}`,
-          map: map
-      });
-      const infowindow = new google.maps.InfoWindow({});
-        google.maps.event.addListener(pin, 'click', () => {
-          infowindow.setContent(marker.info);
-          infowindow.open(map, pin);
-        });
-    });
-
-    // var marker = new google.maps.Marker({
-    //     position: myLatlng,
-    //     title:"Hello World!"
-    // });
-
-    // To add the marker to the map, call setMap();
-    // marker.setMap(map);
-
-
-    // const infowindow = new google.maps.InfoWindow({});
-    //
-    // let marker;
-
-    // for (let i = 0, len = markers.length; i < len; i += 1) {
-    //   const loc = markers[i];
-    //   // console.log('location', loc);
-    //   marker = new google.maps.Marker({
-    //     position: new google.maps.LatLng(loc.info, loc.lat, loc.lng, loc, i),
-    //     map,
-    //     label: (i === 0) ? 'X' : i.toString(),
-    //   });
-    //   // console.log('marker', marker);
-    //
-    //   google.maps.event.addListener(marker, 'click', () => {
-    //     infowindow.setContent(loc.info);
-    //     infowindow.open(map, marker);
-    //   });
-    // }
-  }
-
-  function renderTableRows(item, i = 0) {
-    $coffeeTable.append(`<tr>
-      <td>${i}</td>
-      <td>${item.venue.name}</td>
-      <td>
-        ${item.venue.location.formattedAddress.map(fragment => `<span>${fragment}</span>`)}
-      </td>
-      <td>${item.venue.rating}</td>
-    </tr>`);
-  }
-
-  function writeTableRows(items) {
-    items.forEach((item, i) => {
-      if (!i) return;
-      renderTableRows(item, i);
-    });
-  }
-
-  // fetch coffee venues from Foursquare
-
-  function getCoffeeLocations(coordinates) {
-    axios.get(`https://api.foursquare.com/v2/venues/explore?client_id=VVO2RYUAX4D455H2LVRIUMOUGUVUK3UY0T0YABYFTERIYMS4&client_secret=20YBURIZDKZJHFIGBEPKYSRRIZWDYXTDBAYWEA1SJW24DHMJ&v=20161016&radius=750&openNow=1&section=coffee&ll=${coordinates.latitude},${coordinates.longitude}`)
+function getCoffeeLocations(coordinates) {
+  axios.get(`https://api.foursquare.com/v2/venues/explore?client_id=VVO2RYUAX4D455H2LVRIUMOUGUVUK3UY0T0YABYFTERIYMS4&client_secret=20YBURIZDKZJHFIGBEPKYSRRIZWDYXTDBAYWEA1SJW24DHMJ&v=20161016&radius=750&openNow=1&section=coffee&ll=${coordinates.latitude},${coordinates.longitude}`)
     .then((response) => {
       initMap(coordinates, response);
       const items = response.data.response.groups[0].items;
@@ -187,11 +151,11 @@ function getWeatherData(coordinates) {
     .catch((error) => {
       console.error('coffee error', error);
     });
-  }
+}
 
-  // start the app
-  document.addEventListener('DOMContentLoaded', () => {
-    getPosition()
+// start the app
+document.addEventListener('DOMContentLoaded', () => {
+  getPosition()
     .then((response) => {
       const { coords } = response;
       const { coords: { longitude: long, latitude: lat } } = response;
@@ -201,4 +165,4 @@ function getWeatherData(coordinates) {
     .catch((err) => {
       console.error(err);
     });
-  });
+});
