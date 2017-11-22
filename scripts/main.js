@@ -10,7 +10,8 @@
 // pin venues from foursquare
 // $(document).ready(function){
 
-
+const $window = $(window)
+const $loader = $('#js-loader');
 const $weatherSummary = $('#js-weather-summary');
 const $weatherShowcase = $('#js-weather-showcase');
 const $coffeeTable = $('#coffee-table tbody');
@@ -130,6 +131,7 @@ function initMap(coordinates, response) {
   });
 
   renderMarker(myLatLng,'YOU', map);
+  $loader.hide()
 }
 
 function renderTableRows(item, i) {
@@ -176,4 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch((err) => {
       console.error(err);
     });
+});
+
+$(window).on('load', () => {
+  $loader.show()
 });
