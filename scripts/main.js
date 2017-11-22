@@ -15,6 +15,7 @@ const $weatherSummary = $('#js-weather-summary');
 const $weatherShowcase = $('#js-weather-showcase');
 const $coffeeTable = $('#coffee-table tbody');
 const $weatherShowcaseTime = $('#time')
+const $weatherForecast = $('#js-forecast-weather-summary')
 
 function renderWeatherTemp(temp) {
   const celsiusNumber = ((temp - 32) / (9 / 5)).toFixed(2);
@@ -57,6 +58,7 @@ function handleWeatherData(data) {
   } = data.daily;
 
   $weatherSummary.text(summary);
+  $weatherForecast.text(forecastsummary);
   $weatherShowcaseTime.append(`
     <dt>
       Time
